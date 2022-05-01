@@ -1,31 +1,36 @@
-const ToDoService = require('./toDoService');
-const {helperTodoCreation} = require('./HelperService');
+const ToDoService = require("./toDoService");
+const { helperTodoCreation, helperTodoPatch } = require("./HelperService");
 
 const getTodo = (req, res) => {
   ToDoService.list()
     .then((toDos) => res.status(200).send(toDos))
     .catch((err) => res.status(400).send(err));
-}
+};
 
 const postTodo = (req, res) => {
-
   if (!helperTodoCreation(req)) {
-    res.status(400).send('Incorrect');
-  } 
+    res.status(400).send("Incorrect");
+  }
 
   const body = req.body;
   ToDoService.create(body.text)
     .then((savedToDo) => res.status(201).send(savedToDo))
     .catch((err) => res.status(400).send(err));
-}
+};
 
 const patchTodo = (req, res) => {
+  if (!helperTodoPatch(req)) {
+    res.status(400).send("Incorrect");
+  }
+
   const { id } = req.params;
   ToDoService.patch(id)
-      .then((toDo) => res.status(200).send(toDo))
-      .catch((err) => res.status(400).send(err));
-}
+    .then((toDo) => res.status(200).send(toDo))
+    .catch((err) => res.status(400).send(err));
+};
 
 module.exports = {
-  getTodo, postTodo, patchTodo
-}
+  getTodo,
+  postTodo,
+  patchTodo,
+};
